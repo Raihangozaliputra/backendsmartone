@@ -31,7 +31,17 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+    require __DIR__.'/../vendor/autoload.php';
+} else {
+    // Fallback autoloader for development
+    spl_autoload_register(function ($class) {
+        $file = __DIR__.'/../'.str_replace('\\', '/', $class).'.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
+    });
+}
 
 /*
 |--------------------------------------------------------------------------
